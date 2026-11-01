@@ -14,7 +14,9 @@ import bluej.extensions2.event.PackageListener;
  */
 public class Fukurou extends Extension implements PackageListener
 {
-    public CompileHandler compileHandler = new CompileHandler();
+    TelemetryData data = new TelemetryData();
+    CompileHandler compileHandler = new CompileHandler(data.getCompileData());
+    JsonGenerator jsonGenerator = new JsonGenerator();
     /*
      * When this method is called, the extension may start its work.
      */
@@ -77,6 +79,7 @@ public class Fukurou extends Extension implements PackageListener
 
     public void terminate()
     {
+        jsonGenerator.generate(data);
         System.out.println ("Fukurou terminates");
     }
                
