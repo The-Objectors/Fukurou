@@ -19,11 +19,7 @@ public class JsonGenerator implements Generator{
                 throw new IOException("Could not create directory" + dir.getAbsolutePath());
             }
 
-            TelemetryExport export = new TelemetryExport(
-                    data.getCompileData(),
-                    data.getLifecycleData());
-
-            om.writerWithDefaultPrettyPrinter().writeValue(file, export);
+            om.writerWithDefaultPrettyPrinter().writeValue(file, data);
             System.out.println("Telemetry data file saved to: " + file.getAbsolutePath());
         }
         catch(IOException e){

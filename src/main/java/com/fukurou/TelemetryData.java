@@ -9,7 +9,6 @@ public class TelemetryData {
         lifecycleData = new LifecycleData();    
     }
 
-    //Getter
     public CompileData getCompileData(){return compileData;}
     public LifecycleData getLifecycleData(){return lifecycleData;}
 }
