@@ -15,8 +15,8 @@ import bluej.extensions2.event.PackageListener;
 public class Fukurou extends Extension implements PackageListener
 {
     TelemetryData data = new TelemetryData();
-    CompileHandler compileHandler = new CompileHandler(data.getCompileData());
-    LifecycleHandler lifecycleHandler = new LifecycleHandler(data.getLifecycleData());
+    CompileHandler compileHandler = new CompileHandler(data.getCompileData(), data.getEventLog());
+    LifecycleHandler lifecycleHandler = new LifecycleHandler(data.getLifecycleData(), data.getEventLog());
     JsonGenerator jsonGenerator = new JsonGenerator();
     /*
      * When this method is called, the extension may start its work.

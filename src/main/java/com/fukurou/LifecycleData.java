@@ -1,6 +1,5 @@
 package com.fukurou;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -18,13 +17,11 @@ public class LifecycleData {
 
     public void projectOpened() { projectsOpened++; }
     public void projectClosed() { projectsClosed++; }
-    private final ArrayList<LifecycleEvent> events;
     private final Map<String, Set<String>> knownClassesPerProject;
     private final Map<String, Integer> classModifiedPerProject;
     private String currentProjectName;
 
     public LifecycleData() {
-        events = new ArrayList<LifecycleEvent>();
         knownClassesPerProject = new HashMap<String, Set<String>>();
         classModifiedPerProject = new HashMap<String, Integer>();
     }
@@ -62,8 +59,6 @@ public class LifecycleData {
         return set != null && set.contains(name);
     }
 
-    public void addEvent(LifecycleEvent e) { events.add(e); }
-
     public void setCurrentProjectName(String n) { currentProjectName = n; }
 
     @JsonIgnore
@@ -73,6 +68,5 @@ public class LifecycleData {
     public int getClassCreates()  { return classCreates; }
     public int getClassModifies() { return classModifies; }
     public int getClassDeletes()  { return classDeletes; }
-    public ArrayList<LifecycleEvent> getEvents() { return events; }
     public Map<String, Integer> getClassModifiedPerProject() { return classModifiedPerProject; }
 }

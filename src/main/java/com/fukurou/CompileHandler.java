@@ -1,58 +1,81 @@
 package com.fukurou;
 
+import java.io.File;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+
+import com.fukurou.TelemetryEvent.Target;
+import com.fukurou.TelemetryEvent.Type;
 
 import bluej.extensions2.event.CompileEvent;
 import bluej.extensions2.event.CompileListener;
 
 public class CompileHandler implements CompileListener{
-    
-    LocalTime startTime; 
+
+    LocalTime startTime;
     long timeTaken;
-    CompileData counts;
+    CompileData compileData;
+    private final EventLog log;
 
-    public CompileHandler(CompileData counts){
-        this.counts = counts;
+    public CompileHandler(CompileData compileData, EventLog log){
+        this.compileData = compileData;
+        this.log = log;
     }
-    
 
-    @Override 
+
+    @Override
     public void compileStarted(CompileEvent event){
         startTime = LocalTime.now();
-        counts.countIncrease();
-        System.out.println("Compile started at time: " + startTime);
+        compileData.countIncrease();
+        log.record(Target.COMPILE, Type.START, null, fileNames(event), null);
     }
 
-    @Override 
+    @Override
     public void compileSucceeded(CompileEvent event){
         timeTaken = timeBetween(startTime);
-        counts.successIncrease();
-        System.out.println("Compile Succeeded in " + timeTaken + "s");
+        compileData.successIncrease();
+        log.record(Target.COMPILE, Type.SUCCESS, null, fileNames(event), timeTaken + "ms");
     }
 
-    @Override 
+    @Override
     public void compileFailed(CompileEvent event){
         timeTaken = timeBetween(startTime);
-        counts.failIncrease();
-        System.out.println("Compile Failed in " + timeTaken + "s");
+        compileData.failIncrease();
+        log.record(Target.COMPILE, Type.FAIL, null, fileNames(event), timeTaken + "ms");
     }
 
-    @Override 
+    @Override
     public void compileError(CompileEvent event){
-        counts.errorIncrease();
-        counts.addError("Line " + event.getErrorLineNumber());
-        System.out.println("Compile Error on Line: " + event.getErrorLineNumber());
+        compileData.errorIncrease();
+        compileData.addErrorInfo("Line " + event.getErrorLineNumber());
+        log.record(Target.COMPILE, Type.ERROR, null, fileNames(event),
+                "Line " + event.getErrorLineNumber() + ": " + event.getErrorMessage());
     }
 
     @Override
     public void compileWarning(CompileEvent event){
-        counts.warnIncrease();
-        System.out.println("Compile Warnings Were Found: " + event.toString());
+        compileData.warnIncrease();
+        log.record(Target.COMPILE, Type.WARNING, null, fileNames(event), event.getErrorMessage());
     }
 
     private long timeBetween(LocalTime start){
+        if (start == null) return 0;
         LocalTime end = LocalTime.now();
-        return ChronoUnit.SECONDS.between(start, end);
+        return ChronoUnit.MILLIS.between(start, end);
+    }
+
+    /** Comma-separated names of the files in this compile event, or null if none. */
+    private String fileNames(CompileEvent event){
+        File[] files = event.getFiles();
+
+        if (files == null || files.length == 0) return null;
+        StringBuilder sb = new StringBuilder();
+        
+        for (File f : files) {
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(f.getName());
+        }
+
+        return sb.toString();
     }
 }

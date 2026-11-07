@@ -8,7 +8,7 @@ public class CompileData {
     private int compileFail;
     private int compileError;
     private int compileWarn;
-    private ArrayList<String> errors;
+    private ArrayList<String> errorInfo;
 
     public CompileData(){
         compileCount = 0;
@@ -16,7 +16,7 @@ public class CompileData {
         compileFail = 0;
         compileError = 0;
         compileWarn = 0;
-        errors = new ArrayList<>();
+        errorInfo = new ArrayList<>();
     }
 
     //Getters
@@ -25,7 +25,7 @@ public class CompileData {
     public int getCompileFail(){return compileFail;}
     public int getCompileError(){return compileError;}
     public int getCompileWarn(){return compileWarn;}
-    public ArrayList<String> getErrors(){return errors;}
+    public ArrayList<String> getErrorInfo(){return errorInfo;}
 
     //Count incrementors
     public void countIncrease(){this.compileCount++;}
@@ -33,16 +33,5 @@ public class CompileData {
     public void failIncrease(){this.compileFail++;}
     public void errorIncrease(){this.compileError++;}
     public void warnIncrease(){this.compileWarn++;}
-    public void addError(String e){errors.add(e);}
-
-    @Override
-    public String toString(){
-        return ("\"compile_count\": " + this.compileCount + "," +
-            "\n\"compile_success\": " + this.compileSuccess + "," +
-            "\n\"compile_fail\": " + this.compileFail + "," +
-            "\n\"compile_error\": " + this.compileError + "," +
-            "\n\"compile_warn\": " + this.compileWarn + "," +
-            "\n\"errors: \": " + this.errors + ","
-        );
-    }
+    public void addErrorInfo(String e){errorInfo.add(e);}
 }
