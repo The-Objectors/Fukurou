@@ -16,15 +16,18 @@ public class Fukurou extends Extension implements PackageListener
 {
     TelemetryData data = new TelemetryData();
     CompileHandler compileHandler = new CompileHandler(data.getCompileData());
+    LifecycleHandler lifecycleHandler = new LifecycleHandler(data.getLifecycleData());
     JsonGenerator jsonGenerator = new JsonGenerator();
     /*
      * When this method is called, the extension may start its work.
      */
+    @Override 
     public void startup(BlueJ bluej)
     {
         // Listen for BlueJ events at the "package" level
-        bluej.addPackageListener(this);
+        bluej.addPackageListener(lifecycleHandler);
         bluej.addCompileListener(compileHandler);
+        bluej.addClassListener(lifecycleHandler);
     }
 
     /*
@@ -32,6 +35,7 @@ public class Fukurou extends Extension implements PackageListener
      * System.out is redirected to the BlueJ debug log file.
      * The location of this file is given in the Help/About BlueJ dialog box.
      */
+    @Override 
     public void packageOpened(PackageEvent ev)
     {
         try
@@ -48,6 +52,7 @@ public class Fukurou extends Extension implements PackageListener
     /*
      * A package is closing.
      */
+    @Override
     public void packageClosing(PackageEvent ev)
     {
     } 
@@ -56,6 +61,7 @@ public class Fukurou extends Extension implements PackageListener
      * This method must decide if this Extension is compatible with the                
      * current release of the BlueJ Extensions API
      */
+    @Override
     public boolean isCompatible()
     { 
         return (getExtensionsAPIVersionMajor() >= 3); 
@@ -64,6 +70,7 @@ public class Fukurou extends Extension implements PackageListener
     /*
      * Returns the version number of this extension
      */
+    @Override
     public String getVersion ()
     { 
         return ("1.0.0"); 
@@ -72,17 +79,20 @@ public class Fukurou extends Extension implements PackageListener
     /*
      * Returns the user-visible name of this extension
      */
+    @Override
     public String getName ()
     { 
         return ("Fukurou"); 
     }
 
+    @Override
     public void terminate()
     {
         jsonGenerator.generate(data);
         System.out.println ("Fukurou terminates");
     }
-               
+
+    @Override           
     public String getDescription ()
     {
         return ("Collect usage metrics from users.");
@@ -93,6 +103,7 @@ public class Fukurou extends Extension implements PackageListener
      * The real problem is making sure that the link will still be alive 
      * in three years...
      */
+    @Override
     public URL getURL ()
     {
         try
