@@ -18,6 +18,7 @@ public class Fukurou extends Extension implements PackageListener
     TelemetryData data = new TelemetryData();
     CompileHandler compileHandler = new CompileHandler(data.getCompileData(), data.getEventLog());
     LifecycleHandler lifecycleHandler = new LifecycleHandler(data.getLifecycleData(), data.getEventLog());
+    InvocationHandler invocationHandler = new InvocationHandler(data.getInvocationData(), data.getEventLog());
     JsonGenerator jsonGenerator = new JsonGenerator();
     PdfGenerator pdfGenerator = new PdfGenerator();
     /*
@@ -30,6 +31,7 @@ public class Fukurou extends Extension implements PackageListener
         bluej.addPackageListener(lifecycleHandler);
         bluej.addCompileListener(compileHandler);
         bluej.addClassListener(lifecycleHandler);
+        bluej.addInvocationFinishedListener(invocationHandler);
     }
 
     /*

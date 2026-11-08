@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class TelemetryEvent {
 
     public enum Type { CREATE, MODIFY, DELETE, OPEN, CLOSE, START, SUCCESS, FAIL, ERROR, WARNING }
-    public enum Target { CLASS, PROJECT, COMPILE }
+    public enum Target { CLASS, PROJECT, COMPILE, EXECUTE }
 
     private final Type type;
     private final Target target;
