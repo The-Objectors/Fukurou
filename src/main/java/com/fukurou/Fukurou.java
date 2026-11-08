@@ -1,6 +1,7 @@
 //This code is a placeholder taken from the BlueJ guide website at https://www.bluej.org/extensions/writingextensions2.html
 package com.fukurou;
 
+import java.io.IOException;
 import java.net.URL;
 
 import bluej.extensions2.BlueJ;
@@ -18,6 +19,7 @@ public class Fukurou extends Extension implements PackageListener
     CompileHandler compileHandler = new CompileHandler(data.getCompileData(), data.getEventLog());
     LifecycleHandler lifecycleHandler = new LifecycleHandler(data.getLifecycleData(), data.getEventLog());
     JsonGenerator jsonGenerator = new JsonGenerator();
+    PdfGenerator pdfGenerator = new PdfGenerator();
     /*
      * When this method is called, the extension may start its work.
      */
@@ -85,10 +87,22 @@ public class Fukurou extends Extension implements PackageListener
         return ("Fukurou"); 
     }
 
+    private void exportPdf() {
+    try {
+        pdfGenerator.generate(data);
+    } catch (IOException e) {
+        System.err.println("Could not export Fukurou PDF report: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
+
+    // finalizes and generates report
     @Override
     public void terminate()
     {
+        data.finishSession();
         jsonGenerator.generate(data);
+        exportPdf();
         System.out.println ("Fukurou terminates");
     }
 
@@ -117,4 +131,5 @@ public class Fukurou extends Extension implements PackageListener
             return null;
         }
     }
+
 }

@@ -1,7 +1,6 @@
 package com.fukurou;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -22,7 +21,7 @@ public class TelemetryEvent {
     private final String name;
     private final String project;
     private final String detail;
-    private final String timestamp;
+    private final Instant timestamp;
 
     public TelemetryEvent(Target target, Type type, String project, String name, String detail) {
         this.target = target;
@@ -30,8 +29,7 @@ public class TelemetryEvent {
         this.project = project;
         this.name = name;
         this.detail = detail;
-        this.timestamp = LocalDateTime.now()
-                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        this.timestamp = Instant.now();
     }
 
     public String getType()      { return type.name().toLowerCase(); }
@@ -39,5 +37,5 @@ public class TelemetryEvent {
     public String getName()      { return name; }
     public String getProject()   { return project; }
     public String getDetail()    { return detail; }
-    public String getTimestamp() { return timestamp; }
+    public String getTimestamp() { return timestamp.toString(); }
 }
