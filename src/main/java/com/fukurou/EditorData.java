@@ -151,4 +151,8 @@ public class EditorData {
         }
         return total / (count * 1.0); 
     }
+
+    public long getTotalDuration(){
+        return getActiveTypingMs() + getTotalIdleMs();
+    }
 }

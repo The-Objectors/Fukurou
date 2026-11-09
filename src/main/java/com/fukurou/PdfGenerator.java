@@ -14,6 +14,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 public class PdfGenerator implements Generator{
 
+    @Override 
     public void generate(TelemetryData data) throws IOException {
         File directory = new File(System.getProperty("user.home"), "fukurou");
         if (!directory.exists() && !directory.mkdirs()) {
@@ -69,9 +70,9 @@ public class PdfGenerator implements Generator{
         lines.add("Student ID: " + session.getStudentId());
         lines.add("Started (UTC): " + session.getStartedAtUtc());
         lines.add("Ended (UTC): " + session.getEndedAtUtc());
-        lines.add("Session duration (ms): " + session.getTotalDuration());
-        lines.add("Estimated active time (ms): " + session.getActiveTimeMillis());
-        lines.add("Estimated idle time (ms): " + session.getIdleTimeMillis());
+        lines.add("Session duration (ms): " + data.getEditorData().getTotalDuration());
+        lines.add("Estimated active time (ms): " + data.getEditorData().getActiveTypingMs());
+        lines.add("Estimated idle time (ms): " + data.getEditorData().getTotalIdleMs());
         lines.add("");
         lines.add("Compilation summary");
         lines.add("Attempts: " + compile.getCompileCount());

@@ -4,7 +4,7 @@ import bluej.extensions2.BPackage;
 import bluej.extensions2.MenuGenerator;
 import javafx.scene.control.MenuItem;
 
-// implements the strategy design pattern
+// implements the command design pattern
 public class PdfExportMenuGenerator extends MenuGenerator {
     private final Runnable exportAction;
 
