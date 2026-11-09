@@ -21,6 +21,7 @@ public class Fukurou extends Extension implements PackageListener
     CompileHandler compileHandler = new CompileHandler(data.getCompileData(), data.getEventLog());
     LifecycleHandler lifecycleHandler = new LifecycleHandler(data.getLifecycleData(), data.getEventLog());
     InvocationHandler invocationHandler = new InvocationHandler(data.getInvocationData(), data.getEventLog());
+    EditorActivityHandler editorActivityHandler = new EditorActivityHandler(data.getEditorData());
     JsonGenerator jsonGenerator = new JsonGenerator();
     PdfGenerator pdfGenerator = new PdfGenerator();
     /*
@@ -34,6 +35,9 @@ public class Fukurou extends Extension implements PackageListener
         bluej.addCompileListener(compileHandler);
         bluej.addClassListener(lifecycleHandler);
         bluej.addInvocationFinishedListener(invocationHandler);
+        
+        //Access BlueJ JavaFX thread
+        editorActivityHandler.start();
 
         // sets a menu generator to allow a menu to be created for manual pdf export
         bluej.setMenuGenerator(new PdfExportMenuGenerator(this::exportPdf));
