@@ -1,17 +1,16 @@
 //This code is a placeholder taken from the BlueJ guide website at https://www.bluej.org/extensions/writingextensions2.html
 package com.fukurou;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import bluej.extensions2.BPackage;
 import bluej.extensions2.BlueJ;
 import bluej.extensions2.Extension;
 import bluej.extensions2.ExtensionException;
-import bluej.extensions2.MenuGenerator;
 import bluej.extensions2.event.PackageEvent;
 import bluej.extensions2.event.PackageListener;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.Alert;
 
 /*
  * This is the starting point of a BlueJ Extension
@@ -37,14 +36,8 @@ public class Fukurou extends Extension implements PackageListener
         bluej.addInvocationFinishedListener(invocationHandler);
 
         // sets a menu generator to allow a menu to be created for manual pdf export
-        bluej.setMenuGenerator(new MenuGenerator() {
-            @Override
-            public MenuItem getToolsMenuItem(BPackage bPackage) {
-                MenuItem exportItem = new MenuItem("Export Fukurou PDF Report");
-                exportItem.setOnAction(event -> exportPdf());
-                return exportItem;
-            }
-        });        
+        bluej.setMenuGenerator(new PdfExportMenuGenerator(this::exportPdf));
+                  
     }
 
     /*
@@ -103,13 +96,24 @@ public class Fukurou extends Extension implements PackageListener
     }
 
     private void exportPdf() {
-    try {
-        data.updateSessionSnapshot();
-        pdfGenerator.generate(data);
-    } catch (IOException e) {
-        System.err.println("Could not export Fukurou PDF report: " + e.getMessage());
-        e.printStackTrace();
-    }
+        try {
+            data.updateSessionSnapshot();
+            pdfGenerator.generate(data);
+
+            File report = new File(
+                System.getProperty("user.home"),
+                "fukurou/Telemetry_report.pdf"
+            );
+
+            new Alert(Alert.AlertType.INFORMATION,
+                "PDF report saved to: \n" + report.getAbsolutePath()
+            ).showAndWait();
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR,
+                "PDF export failed: \n" + e.getMessage()
+            ).showAndWait();
+            e.printStackTrace();
+        }
 }
 
     // finalizes and generates report

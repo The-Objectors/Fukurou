@@ -20,7 +20,7 @@ public class PdfGenerator {
             throw new IOException("Could not create directory: " + directory.getAbsolutePath());
         }
 
-        File output = new File(directory, "telemetry_report.pdf");
+        File output = new File(directory, "Telemetry_report.pdf");
         List<String> lines = createReportLines(data);
         List<String> wrappedLines = new ArrayList<>();
 
