@@ -12,7 +12,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
-public class PdfGenerator {
+public class PdfGenerator implements Generator{
 
     public void generate(TelemetryData data) throws IOException {
         File directory = new File(System.getProperty("user.home"), "fukurou");

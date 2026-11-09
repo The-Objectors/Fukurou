@@ -22,8 +22,9 @@ public class Fukurou extends Extension implements PackageListener
     LifecycleHandler lifecycleHandler = new LifecycleHandler(data.getLifecycleData(), data.getEventLog());
     InvocationHandler invocationHandler = new InvocationHandler(data.getInvocationData(), data.getEventLog());
     EditorActivityHandler editorActivityHandler = new EditorActivityHandler(data.getEditorData());
-    JsonGenerator jsonGenerator = new JsonGenerator();
-    PdfGenerator pdfGenerator = new PdfGenerator();
+    private final Generator jsonGenerator = new JsonGenerator();
+    private final Generator pdfGenerator = new PdfGenerator();
+    
     /*
      * When this method is called, the extension may start its work.
      */
@@ -125,7 +126,12 @@ public class Fukurou extends Extension implements PackageListener
     public void terminate()
     {
         data.finishSession();
-        jsonGenerator.generate(data);
+        try {
+            jsonGenerator.generate(data);
+        } catch (IOException ex) {
+            System.err.println("Could not export JSON: " + ex.getMessage());
+            ex.printStackTrace();
+        }
         exportPdf();
         System.out.println ("Fukurou terminates");
     }
