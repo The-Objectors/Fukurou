@@ -1,8 +1,12 @@
 package com.fukurou;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fukurou.TelemetryEvent.Target;
 import com.fukurou.TelemetryEvent.Type;
 
+import bluej.extensions2.BMethod;
 import bluej.extensions2.PackageNotFoundException;
 import bluej.extensions2.ProjectNotOpenException;
 import bluej.extensions2.event.ClassEvent;
@@ -14,6 +18,7 @@ public class LifecycleHandler implements ClassListener, PackageListener {
 
     private final LifecycleData data;
     private final EventLog log;
+    private final Map<String, Integer> methodCountPerClass = new HashMap<String, Integer>();
 
     public LifecycleHandler(LifecycleData data, EventLog log) {
         this.data = data;
@@ -50,6 +55,34 @@ public class LifecycleHandler implements ClassListener, PackageListener {
         } else {
             data.classModify(project);
             log.record(Target.CLASS, Type.MODIFY, project, className, null);
+        }
+        try {
+            BMethod[] methods = event.getBClass().getDeclaredMethods();
+            int currentCount = (methods != null) ? methods.length : 0;
+
+            String key = project + "::" + className;
+            Integer previousCount = methodCountPerClass.get(key);
+
+            if (previousCount == null) {
+                if (currentCount > 0) {
+                    log.record(Target.CLASS, Type.MODIFY, project, className,
+                            "baseline: " + currentCount + " method(s)");
+                    data.addMethodCount(currentCount);
+                }
+            } else if (currentCount > previousCount) {
+                int added = currentCount - previousCount;
+                log.record(Target.CLASS, Type.MODIFY, project, className,
+                        "+ " + added + " method(s) (total " + currentCount + ")");
+                data.addMethodCount(added);
+            } else if (currentCount < previousCount) {
+                int removed = previousCount - currentCount;
+                log.record(Target.CLASS, Type.MODIFY, project, className,
+                        "- " + removed + " method(s) (total " + currentCount + ")");
+            }
+
+            methodCountPerClass.put(key, currentCount);
+        } catch (Exception e) {
+            // Reflection can fail if class disappears mid-event — non-fatal, ignore
         }
     }
 

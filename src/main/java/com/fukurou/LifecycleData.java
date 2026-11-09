@@ -14,6 +14,7 @@ public class LifecycleData {
     private int classDeletes;
     private int projectsOpened;
     private int projectsClosed;
+    private int totalMethodDefinitions;
 
     public void projectOpened() { projectsOpened++; }
     public void projectClosed() { projectsClosed++; }
@@ -61,6 +62,10 @@ public class LifecycleData {
 
     public void setCurrentProjectName(String n) { currentProjectName = n; }
 
+    public void addMethodCount(int n) {this.totalMethodDefinitions += n;}
+
+    public int getTotalMethodDefinitions() {return totalMethodDefinitions;}
+    
     @JsonIgnore
     public String getCurrentProjectName() { return currentProjectName; }
     public int getProjectsOpened() { return projectsOpened; }
