@@ -19,6 +19,10 @@ public class TelemetryData {
         sessionMetadata = new SessionMetadata(compileData);
     }
 
+    public void updateSessionSnapshot(){
+        sessionMetadata.updateSnapshot(eventLog);
+    }
+
     @JsonProperty("compile")
     public CompileData getCompileData(){return compileData;}
 

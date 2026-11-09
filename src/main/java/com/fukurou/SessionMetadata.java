@@ -27,46 +27,53 @@ public class SessionMetadata {
     private long totalDuration;
     private long activeTimeMillis;
     private long idleTimeMillis;
+    private boolean finished;
 
 
-public SessionMetadata(CompileData compileData){
-    this.compileData = compileData;
-}
-
-
-public void finish(EventLog eventLog) {
-    if (endedAtUtc != null) {
-        return;
+    public SessionMetadata(CompileData compileData){
+        this.compileData = compileData;
     }
 
-    Instant endTime = Instant.now();
-    endedAtUtc = endTime.toString();
-    totalDuration = Duration.between(startTime, endTime).toMillis();
-
-    List<Instant> eventTimes = new ArrayList<>();
-    for (TelemetryEvent event : eventLog.getEvents()) {
-        Instant eventTime = Instant.parse(event.getTimestamp());
-        if (!eventTime.isBefore(startTime) && !eventTime.isAfter(endTime)) {
-            eventTimes.add(eventTime);
+    public void updateSnapshot(EventLog eventLog) {
+        if (!finished) {
+            calculateMetrics(eventLog, Instant.now());
         }
     }
-    Collections.sort(eventTimes);
 
-    long activeMillis = 0;
-    Instant previousTime = startTime;
-    for (Instant eventTime : eventTimes) {
-        long gapMillis = Duration.between(previousTime, eventTime).toMillis();
-        activeMillis += Math.min(gapMillis, ACTIVE_GAP_LIMIT_MILLIS);
-        previousTime = eventTime;
+    public void finish(EventLog eventLog) {
+        if (!finished) {
+            calculateMetrics(eventLog, Instant.now());
+            finished = true;
+        }
     }
 
-    long finalGapMillis = Duration.between(previousTime, endTime).toMillis();
-    activeMillis += Math.min(finalGapMillis, ACTIVE_GAP_LIMIT_MILLIS);
+    private void calculateMetrics(EventLog eventLog, Instant endTime) {
+        endedAtUtc = endTime.toString();
+        totalDuration = Duration.between(startTime, endTime).toMillis();
 
-    activeTimeMillis = Math.min(activeMillis, totalDuration);
-    idleTimeMillis = totalDuration - activeTimeMillis;
-}
+        List<Instant> eventTimes = new ArrayList<>();
+        for (TelemetryEvent event : eventLog.getEvents()) {
+            Instant eventTime = Instant.parse(event.getTimestamp());
+            if (!eventTime.isBefore(startTime) && !eventTime.isAfter(endTime)) {
+                eventTimes.add(eventTime);
+            }
+        }
+        Collections.sort(eventTimes);
 
+        long activeMillis = 0;
+        Instant previousTime = startTime;
+        for (Instant eventTime : eventTimes) {
+            long gapMillis = Duration.between(previousTime, eventTime).toMillis();
+            activeMillis += Math.min(gapMillis, ACTIVE_GAP_LIMIT_MILLIS);
+            previousTime = eventTime;
+        }
+
+        long finalGapMillis = Duration.between(previousTime, endTime).toMillis();
+        activeMillis += Math.min(finalGapMillis, ACTIVE_GAP_LIMIT_MILLIS);
+
+        activeTimeMillis = Math.min(activeMillis, totalDuration);
+        idleTimeMillis = totalDuration - activeTimeMillis;
+    }
     public String getStudentId(){return studentId;}
     public String getStartedAtUtc(){return startTime.toString();}
     public String getEndedAtUtc(){return endedAtUtc;}

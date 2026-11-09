@@ -4,11 +4,14 @@ package com.fukurou;
 import java.io.IOException;
 import java.net.URL;
 
+import bluej.extensions2.BPackage;
 import bluej.extensions2.BlueJ;
 import bluej.extensions2.Extension;
 import bluej.extensions2.ExtensionException;
+import bluej.extensions2.MenuGenerator;
 import bluej.extensions2.event.PackageEvent;
 import bluej.extensions2.event.PackageListener;
+import javafx.scene.control.MenuItem;
 
 /*
  * This is the starting point of a BlueJ Extension
@@ -32,6 +35,16 @@ public class Fukurou extends Extension implements PackageListener
         bluej.addCompileListener(compileHandler);
         bluej.addClassListener(lifecycleHandler);
         bluej.addInvocationFinishedListener(invocationHandler);
+
+        // sets a menu generator to allow a menu to be created for manual pdf export
+        bluej.setMenuGenerator(new MenuGenerator() {
+            @Override
+            public MenuItem getToolsMenuItem(BPackage bPackage) {
+                MenuItem exportItem = new MenuItem("Export Fukurou PDF Report");
+                exportItem.setOnAction(event -> exportPdf());
+                return exportItem;
+            }
+        });        
     }
 
     /*
@@ -91,6 +104,7 @@ public class Fukurou extends Extension implements PackageListener
 
     private void exportPdf() {
     try {
+        data.updateSessionSnapshot();
         pdfGenerator.generate(data);
     } catch (IOException e) {
         System.err.println("Could not export Fukurou PDF report: " + e.getMessage());
