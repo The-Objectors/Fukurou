@@ -3,6 +3,7 @@ package com.fukurou;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -79,11 +80,26 @@ public class PdfGenerator {
         lines.add("Errors: " + compile.getCompileError());
         lines.add("Warnings: " + compile.getCompileWarn());
         lines.add("");
-        lines.add("Class event timeline");
-      
         
+        lines.add("Compilation error frequency");
 
+        List<String> errors = compile.getErrorInfo();
+        List<String> reported = new ArrayList<>();
 
+        if (errors.isEmpty()) {
+            lines.add("No compilation errors recorded.");
+        } else {
+            for (String error : errors) {
+                if (!reported.contains(error)) {
+                    lines.add(Collections.frequency(errors, error)
+                            + " occurrence(s): " + error);
+                    reported.add(error);
+                }
+            }
+        }
+      
+        lines.add("Class event timeline");
+        lines.add("");
         boolean foundClassEvent = false;
         for (TelemetryEvent event : data.getEventLog().getEvents()) {
             if ("class".equals(event.getTarget())) {

@@ -47,7 +47,12 @@ public class CompileHandler implements CompileListener{
     @Override
     public void compileError(CompileEvent event){
         compileData.errorIncrease();
-        compileData.addErrorInfo("Line " + event.getErrorLineNumber());
+        String message = event.getErrorMessage();
+        if (message == null || message.trim().isEmpty()) 
+            message = "(no error message)";
+         else 
+            message = message.trim();
+        compileData.addErrorInfo(message);
         log.record(Target.COMPILE, Type.ERROR, null, fileNames(event),
                 "Line " + event.getErrorLineNumber() + ": " + event.getErrorMessage());
     }
