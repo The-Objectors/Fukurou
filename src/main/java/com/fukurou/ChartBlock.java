@@ -3,12 +3,11 @@ package com.fukurou;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import org.jfree.chart.JFreeChart;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.jfree.chart.JFreeChart;
 
 public class ChartBlock implements ReportBlock{
     private final JFreeChart chart;

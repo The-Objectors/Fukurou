@@ -1,7 +1,6 @@
 package com.fukurou;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,7 @@ public class ReportBuilder {
         blocks.add(text(sessionHeader(data)));
         blocks.add(text(kpiStrip(ed, cd)));
 
-        blocks.add(new RowBlock(20f, new ChartBlock(Charts.activeIdleDonut(ed), 240, 200), new ChartBlock(Charts.compileOutcome(cd), 240, 200)));
+        blocks.add(new RowBlock(20f, new ChartBlock(Charts.activeIdleDonut(ed), 200, 200), new ChartBlock(Charts.compileOutcome(cd), 200, 200)));
 
         blocks.add(heading("Compilation error frequency"));
         blocks.add(new ChartBlock(Charts.errorBar(cd.getErrorInfo()), 500, 220));

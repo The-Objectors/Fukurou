@@ -3,7 +3,7 @@ package com.fukurou;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({"compile", "session", "lifecycle", "invocations", "editor_activity", "events"})
+@JsonPropertyOrder({"session", "compile", "lifecycle", "invocations", "editor_activity", "events"})
 public class TelemetryData {
     private final CompileData compileData;
     private final LifecycleData lifecycleData;
@@ -17,12 +17,12 @@ public class TelemetryData {
         lifecycleData = new LifecycleData();
         invocationData = new InvocationData();
         eventLog = new EventLog();
-        sessionMetadata = new SessionMetadata(compileData);
+        sessionMetadata = new SessionMetadata();
         editorData = new EditorData();
     }
 
     public void updateSessionSnapshot(){
-        sessionMetadata.updateSnapshot(eventLog);
+        sessionMetadata.updateSnapshot();
     }
 
     @JsonProperty("compile")
@@ -32,7 +32,7 @@ public class TelemetryData {
     public SessionMetadata getSessionMetadata(){return sessionMetadata;}
 
     public void finishSession(){
-        sessionMetadata.finish(eventLog);
+        sessionMetadata.finish();
     }
 
     @JsonProperty("lifecycle")
