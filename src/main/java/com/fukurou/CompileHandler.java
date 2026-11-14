@@ -12,9 +12,9 @@ import bluej.extensions2.event.CompileListener;
 
 public class CompileHandler implements CompileListener{
 
-    LocalTime startTime;
-    long timeTaken;
-    CompileData compileData;
+    private LocalTime startTime;
+    private long timeTaken;
+    private final CompileData compileData;
     private final EventLog log;
 
     public CompileHandler(CompileData compileData, EventLog log){

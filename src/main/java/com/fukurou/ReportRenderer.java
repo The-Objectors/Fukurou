@@ -24,6 +24,12 @@ public class ReportRenderer {
         try {
             for(ReportBlock block : blocks){
                 float h = block.height(contentWidth);
+
+                if (h > TOP_Y - BOTTOM_Y) {
+                    throw new IOException("Report block height (" + h
+                        + " pt) exceeds the printable page height ("
+                        + (TOP_Y - BOTTOM_Y) + " pt)");
+                }
                 
                 if(y - h < BOTTOM_Y && y < TOP_Y){
                     content.close();

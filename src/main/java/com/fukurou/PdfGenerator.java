@@ -9,13 +9,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 public class PdfGenerator implements Generator{
 
     @Override
-    public void generate(TelemetryData data) throws IOException {
-        File directory = new File(System.getProperty("user.home"), "fukurou");
-        if (!directory.exists() && !directory.mkdirs()) {
-            throw new IOException("Could not create directory: " + directory.getAbsolutePath());
-        }
-
-        File output = new File(directory, "Telemetry_report.pdf");
+    public File generate(TelemetryData data) throws IOException {
+        File output = OutputPaths.pdfFile();
 
         try (PDDocument document = new PDDocument()) {
             List<ReportBlock> blocks = new ReportBuilder().build(data);
@@ -24,5 +19,6 @@ public class PdfGenerator implements Generator{
         }
 
         System.out.println("PDF report saved to: " + output.getAbsolutePath());
+        return output;
     }
 }
