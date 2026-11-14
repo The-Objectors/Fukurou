@@ -9,8 +9,8 @@ import bluej.extensions2.event.InvocationFinishedListener;
 
 public class InvocationHandler implements InvocationFinishedListener{
 
-    InvocationData data;
-    EventLog log;
+    private final InvocationData data;
+    private final EventLog log;
 
     public InvocationHandler(InvocationData data, EventLog log){
         this.data = data;

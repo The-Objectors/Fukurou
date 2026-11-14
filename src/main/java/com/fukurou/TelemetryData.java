@@ -3,7 +3,7 @@ package com.fukurou;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder({"compile", "lifecycle", "invocations", "editor_activity", "events"})
+@JsonPropertyOrder({"compile", "session", "lifecycle", "invocations", "editor_activity", "events"})
 public class TelemetryData {
     private final CompileData compileData;
     private final LifecycleData lifecycleData;

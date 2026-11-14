@@ -103,12 +103,7 @@ public class Fukurou extends Extension implements PackageListener
     private void exportPdf() {
         try {
             data.updateSessionSnapshot();
-            pdfGenerator.generate(data);
-
-            File report = new File(
-                System.getProperty("user.home"),
-                "fukurou/Telemetry_report.pdf"
-            );
+            File report = pdfGenerator.generate(data);
 
             new Alert(Alert.AlertType.INFORMATION,
                 "PDF report saved to: \n" + report.getAbsolutePath()

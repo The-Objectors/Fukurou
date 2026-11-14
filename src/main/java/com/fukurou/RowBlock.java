@@ -21,7 +21,7 @@ public class RowBlock implements ReportBlock{
     }
 
     @Override 
-    public float height(float w){
+    public float height(float w) throws IOException{
         float cw = childWidth(w); 
         float max = 0;
         
