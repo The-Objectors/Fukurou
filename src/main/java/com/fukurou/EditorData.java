@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({"pause_threshold_ms", "idle_threshold_ms", "keystrokes", "keystrokes/min", 
+"burst_count", "average_burst_length", "pauses", "edit_sessions", "idle_periods", 
+"total_idle_ms", "active_typing_ms", "total_duration", "typing_cadence(internal_cv)"})
+
 public class EditorData {
     private final long pauseThresholdMs;
     private final long idleThresholdMs;
@@ -65,18 +72,31 @@ public class EditorData {
             currentBurst = 0;
         }
     }
-
+    @JsonProperty("pause_threshold_ms")
     public long getPauseThreshold() {return pauseThresholdMs;}
+
+    @JsonProperty("idle_threshold_ms")
     public long getIdleThresholdMs() {return idleThresholdMs;}
+
+    @JsonProperty("keystrokes")
     public long getKeystrokes() {return keystrokes;}
+
+    @JsonProperty("pauses")
     public long getPauses() {return pauses;}
-    public long getIdlePeriods() {return idlePeriods;}
-    public long getTotalIdleMs() {return totalIdleMs;}
+
+    @JsonProperty("edit_sessions")
     public long getEditSessions() {return editSessions;}
+
+    @JsonProperty("idle_periods")
+    public long getIdlePeriods() {return idlePeriods;}
+
+    @JsonProperty("total_idle_ms")
+    public long getTotalIdleMs() {return totalIdleMs;}
     
     //Cadence Calculations
     //Jackson ignores getters that return null values when generating the JSON file 
 
+    @JsonProperty("active_typing_ms")
     public long getActiveTypingMs(){
         long sum = 0;
         for(long i : intervals){
@@ -85,6 +105,7 @@ public class EditorData {
         return sum;
     }
 
+    @JsonProperty("keystrokes/min")
     public Double getKeystrokesPerMinute(){
         long active = getActiveTypingMs();
         if(active == 0){
@@ -121,6 +142,7 @@ public class EditorData {
 
     //Coefficient of variation is used for the intervals to determine the user's typing rhythm.
     //Low CV corresponds to a steady rhythm; high shows more erratic stop-start typing.
+    @JsonProperty("typing_cadence(internal_cv)")
     public Double getIntervalCv(){
         Double mean = getMeanIntervalMs();
         if(mean == null || mean == 0 || intervals.size() < 2){
@@ -135,10 +157,12 @@ public class EditorData {
         return sd/mean;
     }
 
+    @JsonProperty("burst_count")
     public long getBurstCount(){
         return burstLengths.size() + (currentBurst > 0 ? 1 : 0);
     }
 
+    @JsonProperty("average_burst_length")
     public Double getMeanBurstLength(){
         long count = burstLengths.size() + (currentBurst > 0 ? 1 : 0);
         if(count == 0){
@@ -151,7 +175,8 @@ public class EditorData {
         }
         return total / (count * 1.0); 
     }
-
+    
+    @JsonProperty("total_duration")
     public long getTotalDuration(){
         return getActiveTypingMs() + getTotalIdleMs();
     }
