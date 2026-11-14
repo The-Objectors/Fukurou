@@ -1,5 +1,6 @@
 package com.fukurou;
 
+
 public class InvocationData {
     private int invocations;
     private int runtimeExceptions;
