@@ -9,6 +9,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.jfree.chart.JFreeChart;
 
+/** Leaf {@link ReportBlock} that draws a JFreeChart as an image (Composite pattern). */
 public class ChartBlock implements ReportBlock{
     private final JFreeChart chart;
     private final float width, chartHeight;

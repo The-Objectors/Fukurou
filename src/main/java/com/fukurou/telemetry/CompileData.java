@@ -8,7 +8,7 @@ public class CompileData {
     private int compileFail;
     private int compileError;
     private int compileWarn;
-    private ArrayList<String> errorInfo;
+    private final ArrayList<String> errorInfo;
 
     public CompileData(){
         compileCount = 0;

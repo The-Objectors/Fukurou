@@ -9,11 +9,18 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import com.fukurou.report.block.ReportBlock;
 import com.fukurou.telemetry.TelemetryData;
 
+/**
+ * Concrete {@link Generator} strategy that renders {@link TelemetryData} to a PDF.
+ * It assembles the page content with {@link ReportBuilder} (Builder) over the
+ * {@link com.fukurou.report.block.ReportBlock} composite, then writes it with PDFBox.
+ */
 public class PdfGenerator implements Generator{
+
+    
 
     @Override
     public File generate(TelemetryData data) throws IOException {
-        File output = OutputPaths.pdfFile();
+        File output = OutputPaths.pdfFile(data);
 
         try (PDDocument document = new PDDocument()) {
             List<ReportBlock> blocks = new ReportBuilder().build(data);

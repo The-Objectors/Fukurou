@@ -7,6 +7,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
+/** Leaf {@link ReportBlock} that wraps and draws a run of text (Composite pattern). */
 public class TextBlock implements ReportBlock{
     private final String raw;
     private final PDFont font;

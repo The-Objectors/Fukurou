@@ -7,6 +7,11 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import java.io.IOException;
 
+/**
+ * Composite {@link ReportBlock} that lays its child blocks out side by side,
+ * splitting the available width between them. Because a row is itself a
+ * {@link ReportBlock}, rows can contain rows (Composite pattern).
+ */
 public class RowBlock implements ReportBlock{
     private final List<ReportBlock> children;
     private final float gap;

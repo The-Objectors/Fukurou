@@ -1,5 +1,6 @@
 package com.fukurou.telemetry;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,10 +22,11 @@ public class LifecycleData {
     private final Map<String, Set<String>> knownClassesPerProject;
     private final Map<String, Integer> classModifiedPerProject;
     private String currentProjectName;
+    private File projectDir;
 
     public LifecycleData() {
-        knownClassesPerProject = new HashMap<String, Set<String>>();
-        classModifiedPerProject = new HashMap<String, Integer>();
+        knownClassesPerProject = new HashMap<>();
+        classModifiedPerProject = new HashMap<>();
     }
 
     public void classCreate(String project, String name) {
@@ -32,7 +34,7 @@ public class LifecycleData {
         String key = project != null ? project : "unknown";
         Set<String> set = knownClassesPerProject.get(key);
         if (set == null) {
-            set = new HashSet<String>();
+            set = new HashSet<>();
             knownClassesPerProject.put(key, set);
         }
         set.add(name);
@@ -62,12 +64,18 @@ public class LifecycleData {
 
     public void setCurrentProjectName(String n) { currentProjectName = n; }
 
+    /** Records the active BlueJ project directory, used to place report output. */
+    public void setProjectDir(File dir) { this.projectDir = dir; }
+
     public void addMethodCount(int n) {this.totalMethodDefinitions += n;}
 
     public int getTotalMethodDefinitions() {return totalMethodDefinitions;}
     
     @JsonIgnore
     public String getCurrentProjectName() { return currentProjectName; }
+
+    @JsonIgnore
+    public File getProjectDir() { return projectDir; }
     public int getProjectsOpened() { return projectsOpened; }
     public int getProjectsClosed() { return projectsClosed; }
     public int getClassCreates()  { return classCreates; }

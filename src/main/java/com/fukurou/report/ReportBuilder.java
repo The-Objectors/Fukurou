@@ -17,6 +17,14 @@ import com.fukurou.telemetry.EditorData;
 import com.fukurou.telemetry.SessionMetadata;
 import com.fukurou.telemetry.TelemetryData;
 
+/**
+ * Assembles the ordered list of {@link com.fukurou.report.block.ReportBlock}s that
+ * make up the PDF report from a {@link TelemetryData} snapshot.
+ *
+ * <p><b>Design pattern: Builder.</b> It constructs a complex, multi-section document
+ * step by step (headings, KPI strip, charts, tables), keeping that layout logic out
+ * of {@link PdfGenerator}.
+ */
 public class ReportBuilder {
     private static final PDFont BODY_FONT    = PDType1Font.HELVETICA;
     private static final PDFont HEADING_FONT  = PDType1Font.HELVETICA_BOLD;

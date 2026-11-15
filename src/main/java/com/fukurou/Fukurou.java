@@ -17,15 +17,12 @@ import com.fukurou.telemetry.TelemetryData;
 
 import bluej.extensions2.BlueJ;
 import bluej.extensions2.Extension;
-import bluej.extensions2.ExtensionException;
-import bluej.extensions2.event.PackageEvent;
-import bluej.extensions2.event.PackageListener;
 import javafx.scene.control.Alert;
 
 /*
  * This is the starting point of a BlueJ Extension
  */
-public class Fukurou extends Extension implements PackageListener
+public class Fukurou extends Extension
 {
     TelemetryData data = new TelemetryData();
     CompileHandler compileHandler = new CompileHandler(data.getCompileData(), data.getEventLog());
@@ -41,7 +38,7 @@ public class Fukurou extends Extension implements PackageListener
     @Override 
     public void startup(BlueJ bluej)
     {
-        // Listen for BlueJ events at the "package" level
+        // Listen for BlueJ events
         bluej.addPackageListener(lifecycleHandler);
         bluej.addCompileListener(compileHandler);
         bluej.addClassListener(lifecycleHandler);
@@ -54,33 +51,6 @@ public class Fukurou extends Extension implements PackageListener
         bluej.setMenuGenerator(new PdfExportMenuGenerator(this::exportPdf));
                   
     }
-
-    /*
-     * A package has been opened. Print the name of the project it is part of.
-     * System.out is redirected to the BlueJ debug log file.
-     * The location of this file is given in the Help/About BlueJ dialog box.
-     */
-    @Override 
-    public void packageOpened(PackageEvent ev)
-    {
-        try
-        {
-            System.out.println("Project " + ev.getPackage().getProject().getName() 
-                               + " opened.");
-        }
-        catch (ExtensionException e)
-        {
-            System.out.println("Project closed by BlueJ");
-        }
-    } 
-               
-    /*
-     * A package is closing.
-     */
-    @Override
-    public void packageClosing(PackageEvent ev)
-    {
-    } 
                
     /*
      * This method must decide if this Extension is compatible with the                
@@ -124,7 +94,7 @@ public class Fukurou extends Extension implements PackageListener
             ).showAndWait();
             e.printStackTrace();
         }
-}
+    }
 
     // finalizes and generates report
     @Override

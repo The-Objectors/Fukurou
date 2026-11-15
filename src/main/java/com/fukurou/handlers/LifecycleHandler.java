@@ -8,7 +8,10 @@ import com.fukurou.telemetry.LifecycleData;
 import com.fukurou.telemetry.TelemetryEvent.Target;
 import com.fukurou.telemetry.TelemetryEvent.Type;
 
+import java.io.File;
+
 import bluej.extensions2.BMethod;
+import bluej.extensions2.BProject;
 import bluej.extensions2.PackageNotFoundException;
 import bluej.extensions2.ProjectNotOpenException;
 import bluej.extensions2.event.ClassEvent;
@@ -16,6 +19,15 @@ import bluej.extensions2.event.ClassListener;
 import bluej.extensions2.event.PackageEvent;
 import bluej.extensions2.event.PackageListener;
 
+/**
+ * Observes BlueJ class and package-lifecycle events and records them into
+ * {@link LifecycleData} and {@link EventLog}.
+ *
+ * This handler is registered with BlueJ (the subject) via 
+ * {@code addClassListener}/{@code addPackageListener}; BlueJ pushes
+ * events to the {@link ClassListener}/{@link PackageListener} callbacks below. New
+ * reactions can be added without BlueJ knowing about this class.
+ */
 public class LifecycleHandler implements ClassListener, PackageListener {
 
     private final LifecycleData data;
@@ -108,12 +120,16 @@ public class LifecycleHandler implements ClassListener, PackageListener {
     @Override
     public void packageOpened(PackageEvent event) {
         String projectName;
+        File projectDir;
         try {
-            projectName = event.getPackage().getProject().getName();
+            BProject project = event.getPackage().getProject();
+            projectName = project.getName();
+            projectDir = project.getDir();
         } catch (ProjectNotOpenException e) {
             return;
         }
         data.setCurrentProjectName(projectName);
+        data.setProjectDir(projectDir);
         data.projectOpened();
         log.record(Target.PROJECT, Type.OPEN, projectName, projectName, null);
     }

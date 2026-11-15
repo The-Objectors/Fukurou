@@ -6,14 +6,17 @@ import java.io.IOException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fukurou.telemetry.TelemetryData;
 
-// implements the Strategy design pattern 
+/**
+ * Concrete {@link Generator} strategy that serialises {@link TelemetryData} to a
+ * pretty-printed JSON file using Jackson. See {@link Generator} for the pattern.
+ */
 public class JsonGenerator implements Generator{
 
     @Override
     public File generate(TelemetryData data)throws IOException{
         ObjectMapper om = new ObjectMapper();
 
-        File file = OutputPaths.jsonFile();
+        File file = OutputPaths.jsonFile(data);
         
         om.writerWithDefaultPrettyPrinter().writeValue(file, data);
         System.out.println("Telemetry data file saved to: " + file.getAbsolutePath());

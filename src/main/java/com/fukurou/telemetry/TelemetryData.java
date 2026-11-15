@@ -3,6 +3,14 @@ package com.fukurou.telemetry;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+/**
+ * Aggregates the per-category telemetry models behind a single object.
+ *
+ * <p><b>Design pattern: Facade.</b> Handlers and generators interact with this one
+ * type instead of wiring up {@link CompileData}, {@link EditorData},
+ * {@link InvocationData}, {@link LifecycleData}, {@link SessionMetadata} and
+ * {@link EventLog} individually. It's also the root object Jackson serialises to JSON.
+ */
 @JsonPropertyOrder({"session", "compile", "lifecycle", "invocations", "editor_activity", "events"})
 public class TelemetryData {
     private final CompileData compileData;

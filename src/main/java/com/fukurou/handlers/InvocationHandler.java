@@ -9,6 +9,11 @@ import bluej.extensions2.BObject;
 import bluej.extensions2.event.InvocationFinishedEvent;
 import bluej.extensions2.event.InvocationFinishedListener;
 
+/**
+ * Observer of BlueJ method/constructor invocation results (Observer pattern):
+ * registered via {@code addInvocationFinishedListener}, it classifies each exit
+ * (normal, exception, user-terminated) into {@link InvocationData} and {@link EventLog}.
+ */
 public class InvocationHandler implements InvocationFinishedListener{
 
     private final InvocationData data;

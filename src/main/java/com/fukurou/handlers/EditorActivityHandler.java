@@ -18,7 +18,7 @@ import javafx.stage.Window;
 public class EditorActivityHandler {
     private final EditorData data;
     
-    private final Set<Window> attached = Collections.newSetFromMap(new WeakHashMap<Window, Boolean>());
+    private final Set<Window> attached = Collections.newSetFromMap(new WeakHashMap<>());
     
     private final Set<KeyCode> heldKeys = EnumSet.noneOf(KeyCode.class);
 

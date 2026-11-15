@@ -12,6 +12,11 @@ import com.fukurou.telemetry.TelemetryEvent.Type;
 import bluej.extensions2.event.CompileEvent;
 import bluej.extensions2.event.CompileListener;
 
+/**
+ * Observer of BlueJ compilation events (Observer pattern): registered via
+ * {@code addCompileListener}, it updates {@link CompileData} and {@link EventLog}
+ * as compiles start, succeed, fail, error or warn.
+ */
 public class CompileHandler implements CompileListener{
 
     private LocalTime startTime;
