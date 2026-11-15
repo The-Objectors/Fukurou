@@ -32,4 +32,20 @@ class TextWrapperTest {
             assertTrue(PDType1Font.HELVETICA.getStringWidth(line) / 1000f * 10f <= maxWidth);
         }
     }
+
+    @Test
+    void wrapsWordsAtWidth() throws IOException {
+        float maxWidth = PDType1Font.HELVETICA.getStringWidth("one two") / 1000f * 10f;
+        List<String> lines = wrapper.wrap( "one two three", PDType1Font.HELVETICA, 10f, maxWidth);
+        assertEquals(Arrays.asList("one two", "three"), lines);
+
+    }
+
+    @Test 
+    void replacesNonAsciiCharacters() throws IOException{
+        List<String> lines = wrapper.wrap(
+            "cof\u00E9", PDType1Font.HELVETICA, 10f, 500f
+        );
+        assertEquals(Arrays.asList("cof?"),lines);
+    }
 }
