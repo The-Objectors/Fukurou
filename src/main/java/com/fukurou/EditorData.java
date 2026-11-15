@@ -28,7 +28,7 @@ public class EditorData {
     private long lastKeyTime = -1;
 
     public EditorData(){
-        this(2000, 30_000);
+        this(2000, 15_000);
     }
 
     public EditorData(long pauseThresholdMs, long idleThresholdMs){
@@ -133,10 +133,10 @@ public class EditorData {
         int n = sorted.size();
 
         if( n % 2 == 0){
-            return sorted.get(n/2) * 1.0;
+            return (sorted.get(n/2 - 1) + sorted.get(n/2)) / 2.0;
         }
         else{
-            return (sorted.get(n/2 - 1) + sorted.get(n/2)) / 2.0;
+            return sorted.get(n/2) * 1.0;
         }
     }
 

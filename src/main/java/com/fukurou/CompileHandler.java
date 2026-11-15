@@ -50,7 +50,7 @@ public class CompileHandler implements CompileListener{
         String message = event.getErrorMessage();
         if (message == null || message.trim().isEmpty()) 
             message = "(no error message)";
-         else 
+        else 
             message = message.trim();
         compileData.addErrorInfo(message);
         log.record(Target.COMPILE, Type.ERROR, null, fileNames(event),
