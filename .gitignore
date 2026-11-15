@@ -1,6 +1,5 @@
 # Maven build outputs
 target/
-*.jar
 
 # IDE files
 .vscode/

@@ -5,6 +5,16 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import com.fukurou.handlers.CompileHandler;
+import com.fukurou.handlers.EditorActivityHandler;
+import com.fukurou.handlers.InvocationHandler;
+import com.fukurou.handlers.LifecycleHandler;
+import com.fukurou.report.Generator;
+import com.fukurou.report.JsonGenerator;
+import com.fukurou.report.PdfExportMenuGenerator;
+import com.fukurou.report.PdfGenerator;
+import com.fukurou.telemetry.TelemetryData;
+
 import bluej.extensions2.BlueJ;
 import bluej.extensions2.Extension;
 import bluej.extensions2.ExtensionException;
