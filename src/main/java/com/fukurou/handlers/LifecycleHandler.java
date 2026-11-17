@@ -23,25 +23,42 @@ import bluej.extensions2.event.PackageListener;
  * Observes BlueJ class and package-lifecycle events and records them into
  * {@link LifecycleData} and {@link EventLog}.
  *
- * This handler is registered with BlueJ (the subject) via 
+ * This handler is registered with BlueJ (the subject) via
  * {@code addClassListener}/{@code addPackageListener}; BlueJ pushes
  * events to the {@link ClassListener}/{@link PackageListener} callbacks below. New
  * reactions can be added without BlueJ knowing about this class.
  */
 public class LifecycleHandler implements ClassListener, PackageListener {
 
+    /** Project and class counters updated by this handler. */
     private final LifecycleData data;
+    /** Event log that receives {@link Target#CLASS} and {@link Target#PROJECT} entries. */
     private final EventLog log;
+    /** Last seen declared-method count per class, keyed by {@code "project::className"}. */
     private final Map<String, Integer> methodCountPerClass = new HashMap<String, Integer>();
 
+    /**
+     * Creates a handler that writes to the given lifecycle data and event log.
+     *
+     * @param data the lifecycle counters to update
+     * @param log  the event log to record lifecycle events in
+     */
     public LifecycleHandler(LifecycleData data, EventLog log) {
         this.data = data;
         this.log = log;
     }
 
     /**
-     * Speradic multiple opened projects can cause the project name to be null.
-     * this is not ideal as it is assigend wrong project names to events or unknown due to BlueJ not being able to resolve the project name.
+     * Resolves the project name for a class event. Uses the current project name
+     * held in {@link LifecycleData}; if none is set, reads it from the event's
+     * class and stores it as the current project.
+     * <p>
+     * When several projects are open the stored name may not match the project
+     * the event came from, so events can be attributed to the wrong project.
+     * </p>
+     *
+     * @param event the BlueJ class event
+     * @return the project name, or {@code "unknown"} if BlueJ cannot resolve it
      */
     private String resolveProject(ClassEvent event) {
         String project = data.getCurrentProjectName();
@@ -58,6 +75,15 @@ public class LifecycleHandler implements ClassListener, PackageListener {
         }
     }
 
+    /**
+     * Records a class as created the first time it is seen in a project, and as
+     * modified on later state changes. Also compares the class's declared-method
+     * count with the previous count and logs the first count as a baseline, then
+     * any methods added or removed. Added methods (and the baseline) are added to
+     * the total in {@link LifecycleData}. Failures while reading the methods are ignored.
+     *
+     * @param event the BlueJ class event
+     */
     @Override
     public void classStateChanged(ClassEvent event) {
         String project = resolveProject(event);
@@ -100,6 +126,11 @@ public class LifecycleHandler implements ClassListener, PackageListener {
         }
     }
 
+    /**
+     * Counts a rename as a class modification and logs the old name.
+     *
+     * @param event the BlueJ class event
+     */
     @Override
     public void classNameChanged(ClassEvent event) {
         String project = resolveProject(event);
@@ -109,6 +140,11 @@ public class LifecycleHandler implements ClassListener, PackageListener {
                 "renamed from " + event.getOldName());
     }
 
+    /**
+     * Records a class deletion.
+     *
+     * @param event the BlueJ class event
+     */
     @Override
     public void classRemoved(ClassEvent event) {
         String project = resolveProject(event);
@@ -117,6 +153,12 @@ public class LifecycleHandler implements ClassListener, PackageListener {
         log.record(Target.CLASS, Type.DELETE, project, className, null);
     }
 
+    /**
+     * Stores the opened project's name and directory as current, counts the open
+     * and logs a {@link Type#OPEN} event. Does nothing if the project is not open.
+     *
+     * @param event the BlueJ package event
+     */
     @Override
     public void packageOpened(PackageEvent event) {
         String projectName;
@@ -134,6 +176,12 @@ public class LifecycleHandler implements ClassListener, PackageListener {
         log.record(Target.PROJECT, Type.OPEN, projectName, projectName, null);
     }
 
+    /**
+     * Clears the current project name, counts the close and logs a
+     * {@link Type#CLOSE} event. Does nothing if no project is current.
+     *
+     * @param event the BlueJ package event
+     */
     @Override
     public void packageClosing(PackageEvent event) {
         String name = data.getCurrentProjectName();
