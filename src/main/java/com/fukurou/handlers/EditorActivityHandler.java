@@ -1,12 +1,11 @@
 package com.fukurou.handlers;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Set;
 import java.util.WeakHashMap;
 
 import com.fukurou.telemetry.EditorData;
-
-import java.util.EnumSet;
 
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -14,6 +13,14 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Window;
+
+/**
+ * Tracks editor activity through keystroke logging.
+ * <p>
+ * Hooks into the JavaFX thread of BlueJ to log keystrokes.
+ * </p>
+ * {@link EditorData} handles keystroke metric calculations.
+ */
 
 public class EditorActivityHandler {
     private final EditorData data;
