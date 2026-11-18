@@ -13,27 +13,53 @@ import com.fukurou.telemetry.TelemetryData;
  * path logic (Single Responsibility). Per the project rubric, output is written
  * into the active BlueJ project directory and named for the session
  * ({@code <project>_<startTimestamp>}) so that each session produces a separate,
- * non-overwritten file. When no project directory is known, it falls back to a 
+ * non-overwritten file. When no project directory is known, it falls back to a
  * {@code fukurou} folder under the user's home directory.
  */
 final class OutputPaths {
+    /** Name of the fallback folder created under the user's home directory. */
     private static final String FALLBACK_DIR = "fukurou";
 
+    /** Not instantiable; all methods are static. */
     private OutputPaths() {
     }
 
+    /**
+     * Path of the JSON output file for this session.
+     *
+     * @param data the session telemetry
+     * @return the {@code .json} file in the output directory
+     * @throws IOException if the fallback directory is needed and cannot be created
+     */
     static File jsonFile(TelemetryData data) throws IOException {
         return new File(outputDirectory(data), label(data) + ".json");
     }
 
+    /**
+     * Path of the PDF output file for this session.
+     *
+     * @param data the session telemetry
+     * @return the {@code .pdf} file in the output directory
+     * @throws IOException if the fallback directory is needed and cannot be created
+     */
     static File pdfFile(TelemetryData data) throws IOException {
         return new File(outputDirectory(data), label(data) + ".pdf");
     }
 
+    /**
+     * Builds a file-name-safe label of the form {@code <name>_<time>}.
+     * In the name, characters other than letters, digits, {@code .}, {@code _} and
+     * {@code -} become {@code _}; in the time, characters other than letters,
+     * digits and {@code -} become {@code -}.
+     *
+     * @param projectName the project name; {@code "session"} is used if {@code null} or empty
+     * @param startedUtc  the session start time; may be {@code null}
+     * @return the label, or just the name part if the start time is {@code null} or empty
+     */
     static String sessionLabel(String projectName, String startedUtc) {
         String name;
         String time;
-        
+
         if(projectName == null || projectName.isEmpty()){
             name = "session";
         } else{
@@ -50,6 +76,13 @@ final class OutputPaths {
         return safeTime.isEmpty() ? safeName : safeName + "_" + safeTime;
     }
 
+    /**
+     * Session label for the given telemetry. Uses the current project name, or the
+     * project directory's name if no project name is set, plus the session start time.
+     *
+     * @param data the session telemetry
+     * @return the label from {@link #sessionLabel(String, String)}
+     */
     private static String label(TelemetryData data) {
         LifecycleData lifecycle = data.getLifecycleData();
         String name = lifecycle.getCurrentProjectName();
@@ -60,6 +93,14 @@ final class OutputPaths {
         return sessionLabel(name, data.getSessionMetadata().getStartedAtUtc());
     }
 
+    /**
+     * The project directory if it is set and exists; otherwise the fallback
+     * folder under the user's home directory, created if needed.
+     *
+     * @param data the session telemetry
+     * @return the directory to write output to
+     * @throws IOException if the fallback directory does not exist and cannot be created
+     */
     private static File outputDirectory(TelemetryData data) throws IOException {
         File projectDir = data.getLifecycleData().getProjectDir();
         if (projectDir != null && projectDir.isDirectory()) {

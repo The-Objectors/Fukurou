@@ -15,5 +15,12 @@ import com.fukurou.telemetry.TelemetryData;
  * one more implementation without touching the context.
  */
 public interface Generator {
+    /**
+     * Writes the telemetry data to a file.
+     *
+     * @param data the telemetry to write
+     * @return the file that was written
+     * @throws IOException if the file cannot be created or written
+     */
     File generate(TelemetryData data) throws IOException;
 }

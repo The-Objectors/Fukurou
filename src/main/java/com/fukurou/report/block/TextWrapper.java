@@ -6,7 +6,23 @@ import java.util.List;
 
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
+/**
+ * Splits text into lines that fit a given width for a given font and size.
+ * Used by {@link TextBlock}.
+ */
 final class TextWrapper {
+    /**
+     * Wraps text to the given width. Each {@code \n} starts a new line; within a
+     * line, words are separated at spaces, and a word wider than the line is split
+     * between characters. Characters outside printable ASCII (32 to 126) are replaced with {@code ?}.
+     *
+     * @param text     the text to wrap
+     * @param font     the font used to measure the text
+     * @param fontSize the font size in points
+     * @param maxWidth the maximum line width in points
+     * @return the wrapped lines; an empty input line produces an empty string
+     * @throws IOException if the font cannot measure the text
+     */
     List<String> wrap(String text, PDFont font, float fontSize, float maxWidth)
             throws IOException {
         List<String> result = new ArrayList<>();
@@ -17,6 +33,16 @@ final class TextWrapper {
         return result;
     }
 
+    /**
+     * Wraps a single line (one without {@code \n}) to the given width.
+     *
+     * @param text     the line to wrap
+     * @param font     the font used to measure the text
+     * @param fontSize the font size in points
+     * @param maxWidth the maximum line width in points
+     * @return the wrapped lines; a single empty string if the line is empty
+     * @throws IOException if the font cannot measure the text
+     */
     private List<String> wrapLine(String text, PDFont font, float fontSize, float maxWidth)
             throws IOException {
         List<String> result = new ArrayList<>();
@@ -58,6 +84,12 @@ final class TextWrapper {
         return result;
     }
 
+    /**
+     * Replaces every character outside printable ASCII (32 to 126) with {@code ?}.
+     *
+     * @param text the text
+     * @return the text with only printable ASCII characters
+     */
     private String toAscii(String text) {
         StringBuilder result = new StringBuilder();
 
@@ -68,10 +100,30 @@ final class TextWrapper {
         return result.toString();
     }
 
+    /**
+     * Width of the text in the given font and size.
+     *
+     * @param font     the font
+     * @param fontSize the font size in points
+     * @param text     the text to measure
+     * @return the width in points
+     * @throws IOException if the font cannot measure the text
+     */
     private float stringWidth(PDFont font, float fontSize, String text) throws IOException {
         return font.getStringWidth(text) / 1000f * fontSize;
     }
 
+    /**
+     * Splits a word into pieces that each fit the width. A piece always has at
+     * least one character, so a single character wider than the width becomes its own piece.
+     *
+     * @param word     the word to split
+     * @param font     the font used to measure the text
+     * @param fontSize the font size in points
+     * @param maxWidth the maximum piece width in points
+     * @return the pieces, in order
+     * @throws IOException if the font cannot measure the text
+     */
     private List<String> breakLongWord(String word, PDFont font, float fontSize, float maxWidth)
             throws IOException {
         List<String> parts = new ArrayList<>();

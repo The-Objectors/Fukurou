@@ -16,8 +16,22 @@ import com.fukurou.telemetry.TelemetryData;
  */
 public class PdfGenerator implements Generator{
 
-    
+    /** Creates a PDF generator. */
+    public PdfGenerator(){
+    }
 
+
+
+    /**
+     * Builds the report blocks, lays them out with {@link ReportRenderer}, saves the
+     * PDF to the path given by {@link OutputPaths} (replacing any existing file there)
+     * and prints the file's path to standard output.
+     *
+     * @param data the telemetry to report on
+     * @return the PDF file that was written
+     * @throws IOException if the output directory cannot be created, a block does not
+     *                     fit on a page, or the file cannot be written
+     */
     @Override
     public File generate(TelemetryData data) throws IOException {
         File output = OutputPaths.pdfFile(data);
